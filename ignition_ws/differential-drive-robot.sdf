@@ -13,7 +13,6 @@
         </plugin>
 
         <gui fullscreen="1">
-
             <!-- 3D scene -->
             <plugin filename="GzScene3D" name="3D View">
                 <ignition-gui>
@@ -80,6 +79,14 @@
             <!-- Entity tree -->
             <plugin filename="EntityTree" name="Entity tree">
             </plugin>
+
+            <!-- Camera does not work as of now! (IGN Gazebo)
+                    see: https://github.com/ignitionrobotics/ign-gazebo/issues/421
+             -->
+            <camera name="main-camera">
+                <projection_type>perspective</projection_type>
+                <pose>0 -1 0 -0.8 0 0</pose>
+            </camera>
 
         </gui>
 
