@@ -12,11 +12,11 @@ Sends commands to the wheels and receives information about current angular velo
 
 ## simulation_control
 
-### gazebo_bridge
+### gazebo_bridge (node)
 
 Sends information from `odometry` about current angular velocity and planar velocity to the `cmd_vel`. Ignition Gazebo's diff-drive plugin will listen to that topic and move the robot accordingly.
 
-### localization
+## localization
 
 ### odometry (node)
 
