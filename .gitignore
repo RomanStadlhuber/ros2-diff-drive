@@ -1,0 +1,9 @@
+.vscode/
+.vs/
+log/
+
+# TODO: ignore package non-source folders
+
+robot_ws/build/
+robot_ws/install/
+robot_ws/log/
