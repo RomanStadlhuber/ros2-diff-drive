@@ -6,26 +6,27 @@ To be announced
 
 ### wheel_control
 
-### wheel_driver (node)
+#### wheel_driver (node)
 
 Sends commands to the wheels and receives information about current angular velocity of each wheel.
 
-## simulation_control
+### simulation_control
 
-### gazebo_bridge (node)
+#### gazebo_bridge (node)
 
 Sends information from `odometry` about current angular velocity and planar velocity to the `cmd_vel`. Ignition Gazebo's diff-drive plugin will listen to that topic and move the robot accordingly.
 
-## localization
+### localization
 
-### odometry (node)
+#### odometry (node)
 
 Uses `wheel_driver`s information about angular velocity of both wheels to calculate angular and planar velocity of the robot.
 
-### localize (node)
+#### localize (node)
 
 Performs planar localization based on `odometry`s current angular and planar velocity information about the robot.
 
+## Misc
 
 ### Visual Studio Code Integration
 
