@@ -3,7 +3,9 @@
 #include <chrono>
 #include <string>
 #include <functional>
+#include <math.h>
 #include "angular_vel/msg/diff_drive_omega.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1; // used to signify placeholder parameters
@@ -17,6 +19,8 @@ class Odometry: public rclcpp::Node{
         // the last argument indicated the number of paremeters the bound function needs
         std::bind(&Odometry::sub_callback, this, _1)
       );
+
+      publisher_ = this -> create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
     }
   private:
 
@@ -26,11 +30,34 @@ class Odometry: public rclcpp::Node{
       RCLCPP_INFO(this -> get_logger(), "w-left: %lf, w-right: %lf", omega->wl, omega->wr);
       
       // calculate planar and angular velocity
-      double vel_planar = calc_vel_planar(&omega->wl, &omega->wr);
-      double vel_angular = calc_vel_angular(&omega->wl, &omega->wr, &_axislen);
+      _dv = calc_vel_planar(&omega->wl, &omega->wr);
+      _dw = calc_vel_angular(&omega->wl, &omega->wr, &_axislen);
 
       // log calculation results
-      RCLCPP_INFO(this -> get_logger(), "dv: %lf, dw: %lf", vel_planar, vel_angular);
+      RCLCPP_INFO(this -> get_logger(), "dv: %lf, dw: %lf", _dv, _dw);
+
+      // ----------------- prepare twist message ------------------
+
+      auto planar = geometry_msgs::msg::Vector3();
+
+      planar.x = _dv * cos(_dw);
+      planar.y = _dv * sin(_dw);
+      planar.z = 0;
+
+      auto angular = geometry_msgs::msg::Vector3();
+
+      angular.x = angular.y = 0;
+
+      angular.z = _dw;
+
+      auto message = geometry_msgs::msg::Twist();
+
+      message.angular = angular;
+      message.linear = planar;
+
+      //----------------- publish message -------------------------
+
+      publisher_->publish(message);
     }
 
     double calc_vel_angular(double * wl, double * wr, double * axislen){
@@ -43,7 +70,15 @@ class Odometry: public rclcpp::Node{
 
     double _axislen = 0.12;
 
+    /**
+     * define odometry buffer values
+     */
+
+    double _dv = 0.0; // instantaneous planar velocity "delta v"
+    double _dw = 0.0; // instantaneous angular velocity "delta w"
+
     rclcpp::Subscription<angular_vel::msg::DiffDriveOmega>::SharedPtr subscription_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
 };
 
 

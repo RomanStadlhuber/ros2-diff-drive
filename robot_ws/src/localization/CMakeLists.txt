@@ -19,9 +19,11 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(angular_vel REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 add_executable(odometry src/odometry.cpp)
 ament_target_dependencies(odometry rclcpp angular_vel)
+ament_target_dependencies(odometry rclcpp geometry_msgs)
 
 target_include_directories(odometry PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
