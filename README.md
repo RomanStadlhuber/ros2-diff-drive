@@ -4,6 +4,38 @@ To be announced
 
 ## Packages
 
+### angular_vel
+
+Message definition for angular velocity of the differential drive's wheels.
+
+#### DiffDriveOmega
+
+See **msg > DiffDriveOmega.msg** for message definition
+</br>
+- **wl** - angular velocity (omega) of left wheel
+- **wr** - angular velocity (omega) of right wheel
+
+##### Build the Package
+
+To build:
+</br>
+`robot_ws:$ colcon build --package-select angular_vel`
+</br>
+To install:
+</br>
+`robot_ws:$ . install/setup.bash`
+</br>
+To test message definition:
+<br>
+`robot_ws:$ ros2 interface show angular_vel/msg/DiffDriveOmega`
+</br>
+Outputs:
+```
+float64 wl # omega left wheel
+float64 wr # omega right wheel
+```
+
+
 ### wheel_control
 
 #### wheel_driver (node)
