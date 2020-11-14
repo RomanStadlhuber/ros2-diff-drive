@@ -21,8 +21,27 @@ class Odometry: public rclcpp::Node{
   private:
 
     void sub_callback(const angular_vel::msg::DiffDriveOmega::SharedPtr omega){
-      RCLCPP_INFO(this -> get_logger(), "w-left: %d, w-right: %d", omega->wl, omega->wr);
-    } 
+
+      // log received information
+      RCLCPP_INFO(this -> get_logger(), "w-left: %lf, w-right: %lf", omega->wl, omega->wr);
+      
+      // calculate planar and angular velocity
+      double vel_planar = calc_vel_planar(&omega->wl, &omega->wr);
+      double vel_angular = calc_vel_angular(&omega->wl, &omega->wr, &_axislen);
+
+      // log calculation results
+      RCLCPP_INFO(this -> get_logger(), "dv: %lf, dw: %lf", vel_planar, vel_angular);
+    }
+
+    double calc_vel_angular(double * wl, double * wr, double * axislen){
+      return (*wr - *wl)/(*axislen);
+    }
+
+    double calc_vel_planar(double * wl, double * wr){
+      return (*wr + *wl)/2;
+    }
+
+    double _axislen = 0.12;
 
     rclcpp::Subscription<angular_vel::msg::DiffDriveOmega>::SharedPtr subscription_;
 };

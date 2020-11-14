@@ -23,6 +23,7 @@ class WheelPublisher:public rclcpp::Node{
        * initialize ros publish timer
        */
       timer_ = this -> create_wall_timer(500ms, std::bind(&WheelPublisher::timer_callback, this));
+
     } 
 
   private:
@@ -31,8 +32,8 @@ class WheelPublisher:public rclcpp::Node{
       auto message = angular_vel::msg::DiffDriveOmega();
       
       // for now, set both to 0.5 rad/s
-      message.set__wl(0.5);
-      message.set__wr(0.5);
+      message.wl = 0.5;
+      message.wr = 0.5;
 
       publisher_->publish(message);
     }  
