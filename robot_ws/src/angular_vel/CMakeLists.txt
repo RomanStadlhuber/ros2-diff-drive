@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(wheel_control)
+project(angular_vel)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,20 +17,17 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(angular_vel REQUIRED)
+# uncomment the following section in order to fill in
+# further dependencies manually.
+# find_package(<dependency> REQUIRED)
 
+# package needed for interface generators
+find_package(rosidl_default_generators REQUIRED)
 
-add_executable(wheel_driver src/wheel_driver.cpp)
-ament_target_dependencies(wheel_driver rclcpp angular_vel)
-target_include_directories(wheel_driver PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/DiffDriveOmega.msg"
+ )
 
-
-
-install(TARGETS wheel_driver
-  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
