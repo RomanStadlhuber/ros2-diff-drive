@@ -30,4 +30,11 @@ def generate_launch_description():
             namespace="diff_drive",
             executable="odometry"
         ),
+        ExecuteProcess(
+            cmd=[
+                "ros2 run ros_ign_bridge parameter_bridge",
+                "/diff_drive/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist"
+            ],
+            shell=True
+        )
     ])
