@@ -30,8 +30,8 @@ class Odometry: public rclcpp::Node{
       RCLCPP_INFO(this -> get_logger(), "w-left: %lf, w-right: %lf", omega->wl, omega->wr);
       
       // calculate planar and angular velocity
-      _dv = calc_vel_planar(&omega->wl, &omega->wr);
-      _dw = calc_vel_angular(&omega->wl, &omega->wr, &_axislen);
+      _dv = calc_vel_planar(&omega->wl, &omega->wr, &_wheelRadius);
+      _dw = calc_vel_angular(&omega->wl, &omega->wr, &_axislen, &_wheelRadius);
 
       // log calculation results
       RCLCPP_INFO(this -> get_logger(), "dv: %lf, dw: %lf", _dv, _dw);
@@ -40,9 +40,8 @@ class Odometry: public rclcpp::Node{
 
       auto planar = geometry_msgs::msg::Vector3();
 
-      planar.x = _dv * cos(_dw);
-      planar.y = _dv * sin(_dw);
-      planar.z = 0;
+      planar.x = _dv; // the simulation only receives frontal velocity
+      planar.y = planar.z = 0;
 
       auto angular = geometry_msgs::msg::Vector3();
 
@@ -55,20 +54,29 @@ class Odometry: public rclcpp::Node{
       message.angular = angular;
       message.linear = planar;
 
+      /**
+       * TODO: vector3 message definiton for directed distance
+       * 1 - create stopwatch to measure time between incoming subscription messages
+       * 2 - create directed instantaneous velocity vector with x = dv * cos(dw) and y = dv * sin dw
+       * 3 - multiply vel with dt (stopwatch) to receive instantaneous distance
+       * 4 - publish instantaneous distance to "/odometry"
+       */
+      
       //----------------- publish message -------------------------
 
       publisher_->publish(message);
     }
 
-    double calc_vel_angular(double * wl, double * wr, double * axislen){
-      return (*wr - *wl)/(*axislen);
+    double calc_vel_angular(double * wl, double * wr, double * axislen, double * radius){
+      return ((*wr * *radius) + (*wl * *radius))/(*axislen);
     }
 
-    double calc_vel_planar(double * wl, double * wr){
-      return (*wr + *wl)/2;
+    double calc_vel_planar(double * wl, double * wr, double * radius){
+      return ((*wr * *radius) + (*wl * *radius))/2;
     }
 
-    double _axislen = 0.12;
+    double _axislen = 0.12; // unit is meters
+    double _wheelRadius = 40.75;
 
     /**
      * define odometry buffer values
