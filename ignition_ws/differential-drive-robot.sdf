@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.7">
-    <world name="car_world">
+    <world name="diff_drive_world">
         <physics name="1ms" type="ignored">
             <max_step_size>0.001</max_step_size>
             <real_time_factor>1.0</real_time_factor>
@@ -47,8 +47,8 @@
                 <play_pause>true</play_pause>
                 <step>true</step>
                 <start_paused>true</start_paused>
-                <service>/world/car_world/control</service>
-                <stats_topic>/world/car_world/stats</stats_topic>
+                <service>/world/diff_drive_world/control</service>
+                <stats_topic>/world/diff_drive_world/stats</stats_topic>
             </plugin>
 
             <!-- World statistics -->
@@ -72,7 +72,7 @@
                 <real_time>true</real_time>
                 <real_time_factor>true</real_time_factor>
                 <iterations>true</iterations>
-                <topic>/world/car_world/stats</topic>
+                <topic>/world/diff_drive_world/stats</topic>
 
             </plugin>
 
@@ -336,7 +336,7 @@
                 <wheel_separation>0.217</wheel_separation>
                 <wheel_radius>0.0408</wheel_radius>
                 <odom_publish_frequency>1</odom_publish_frequency>
-                <topic>cmd_vel</topic>
+                <topic>/diff_drive/cmd_vel</topic>
             </plugin>
         </model>
     </world>
