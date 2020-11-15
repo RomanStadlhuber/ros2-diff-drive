@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <ctime>
 #include <rclcpp/rclcpp.hpp>
 #include <chrono>
 #include <string>
@@ -61,22 +62,30 @@ class Odometry: public rclcpp::Node{
        * 3 - multiply vel with dt (stopwatch) to receive instantaneous distance
        * 4 - publish instantaneous distance to "/odometry"
        */
-      
+
+      rclcpp::Time tnow = nodeclock->now();
+
+      rclcpp::Duration dt = tnow - _lastmsg;
+
+      _lastmsg = tnow;
+
+      RCLCPP_INFO(this -> get_logger(), "dt: %lf[s]", dt.seconds());
+
       //----------------- publish message -------------------------
 
       publisher_->publish(message);
     }
 
     double calc_vel_angular(double * wl, double * wr, double * axislen, double * radius){
-      return ((*wr * *radius) + (*wl * *radius))/(*axislen);
+      return (((*wr) * (*radius)) - ((*wl) * (*radius)))/(*axislen);
     }
 
     double calc_vel_planar(double * wl, double * wr, double * radius){
-      return ((*wr * *radius) + (*wl * *radius))/2;
+      return (((*wr) * (*radius)) + ((*wl) * (*radius)))/2;
     }
 
     double _axislen = 0.12; // unit is meters
-    double _wheelRadius = 40.75;
+    double _wheelRadius = 0.004075; // unit is meters
 
     /**
      * define odometry buffer values
@@ -85,8 +94,16 @@ class Odometry: public rclcpp::Node{
     double _dv = 0.0; // instantaneous planar velocity "delta v"
     double _dw = 0.0; // instantaneous angular velocity "delta w"
 
+
     rclcpp::Subscription<angular_vel::msg::DiffDriveOmega>::SharedPtr subscription_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
+    /**
+     * NOTE: see https://answers.ros.org/question/321436/ros2-msg-stamp-time-difference/
+     */
+    rclcpp::Clock::SharedPtr nodeclock = this->get_clock();
+
+
+    rclcpp::Time _lastmsg = nodeclock->now();
 };
 
 
