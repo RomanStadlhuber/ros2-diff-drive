@@ -42,11 +42,11 @@ class Odometry: public rclcpp::Node{
       auto planar = geometry_msgs::msg::Vector3();
 
       planar.x = _dv; // the simulation only receives frontal velocity
-      planar.y = planar.z = 0;
+      planar.y = planar.z = 0.0;
 
       auto angular = geometry_msgs::msg::Vector3();
 
-      angular.x = angular.y = 0;
+      angular.x = angular.y = 0.0;
 
       angular.z = _dw;
 
