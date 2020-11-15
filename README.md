@@ -96,7 +96,7 @@ Within your C/C++ configuration, be sure to add the include path of your ROS2 di
             "includePath": [
                 "/usr/include/**",
                 // list your ROS2 distros include dir here!
-                "/opt/ros/foxy/include/**"
+                "/opt/ros/foxy/include/**",
                 // include custom message definitions
                 "${workspaceFolder}/robot_ws/install/angular_vel/include/**"
             ],
