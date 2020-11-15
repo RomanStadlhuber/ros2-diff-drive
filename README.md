@@ -1,6 +1,8 @@
 # ros2-diff-drive
 
-To be announced
+## Important Remarks
+
+When running the simulation launch file, do not forget to **press play** :)
 
 ## Quick Start
 
