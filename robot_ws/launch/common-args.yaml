@@ -4,4 +4,4 @@ diff_drive/odometry:
     wheelradius: 40.8
 diff_drive/wheel_driver:
   ros__parameters:
-    angularaccel: 0.25
+    angularacc: 0.25
