@@ -25,11 +25,14 @@ add_executable(odometry src/odometry.cpp)
 ament_target_dependencies(odometry rclcpp angular_vel)
 ament_target_dependencies(odometry rclcpp geometry_msgs)
 
+add_executable(localize src/localize.cpp)
+ament_target_dependencies(localize rclcpp geometry_msgs)
+
 target_include_directories(odometry PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-install(TARGETS odometry
+install(TARGETS odometry localize
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)

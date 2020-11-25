@@ -86,7 +86,9 @@ class WheelPublisher:public rclcpp::Node{
         dt_l_ = nodeclock_ -> now() - last_divert_;
 
         _wl += (_wl > _wl_target?-1.0:1.0) * _angular_accelleration * dt_l_.seconds();
-      }
+      }else{
+        _wl = _wl_target;
+      } 
 
       if(!is_in_margin(_wr,_wr_target, EASE_MARGIN)){
 
@@ -95,7 +97,9 @@ class WheelPublisher:public rclcpp::Node{
         dt_r_ = nodeclock_ -> now() - last_divert_;
 
         _wr += (_wr > _wr_target?-1.0:1.0) * _angular_accelleration * dt_r_.seconds();
-      } 
+      }else{
+        _wr = _wr_target;
+      }
     } 
 
     bool is_in_margin(double value, double target, double margin){

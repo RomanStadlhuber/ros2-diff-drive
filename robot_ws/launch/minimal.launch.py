@@ -26,5 +26,13 @@ def generate_launch_description():
             parameters=[
                 param_file_path
             ]
+        ),
+        Node(
+            package="localization",
+            namespace="diff_drive",
+            executable="localize",
+            parameters=[
+                param_file_path
+            ]
         )
     ])

@@ -29,8 +29,10 @@ public:
     this->declare_parameters(_namespace, _arglist);
 
     this->get_parameter(PARAM_AXISLEN, _axislen);
+    _axislen = _axislen * 0.001;
 
     this -> get_parameter(PARAM_WHEELRADIUS, _wheelRadius);
+    _wheelRadius = _wheelRadius * 0.001;
 
     RCLCPP_INFO(this->get_logger(), "init node odometry with\n\taxislen: %lf\n\twheelradius: %lf", _axislen, _wheelRadius);
 
@@ -42,9 +44,9 @@ public:
         // the last argument indicated the number of paremeters the bound function needs
         std::bind(&Odometry::sub_callback, this, _1));
 
-    publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
+    publisher_twist_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
 
-    
+    publisher_odometry_ = this -> create_publisher<geometry_msgs::msg::Vector3>("odometry", 10);
 
   }
 
@@ -88,6 +90,12 @@ private:
        * 4 - publish instantaneous distance to "/odometry"
        */
 
+    //----------------- publish message -------------------------
+
+    publisher_twist_->publish(message);
+
+    //-- calculate and publish instantaneous directed distance --
+
     rclcpp::Time tnow = nodeclock->now();
 
     rclcpp::Duration dt = tnow - _lastmsg;
@@ -96,9 +104,13 @@ private:
 
     RCLCPP_INFO(this->get_logger(), "dt: %lf[s]", dt.seconds());
 
-    //----------------- publish message -------------------------
+    auto ds = geometry_msgs::msg::Vector3();
 
-    publisher_->publish(message);
+    ds.z = 0;
+    ds.x = _dv * cos(_dw + M_PI_2) * dt.seconds();
+    ds.y = _dv * sin(_dw + M_PI_2) * dt.seconds();
+
+    publisher_odometry_->publish(ds);
   }
 
   // local variabled and functions used to calculate odometry
@@ -128,7 +140,8 @@ private:
   // ROS specific variables for nodes, timing and parameters
 
   rclcpp::Subscription<angular_vel::msg::DiffDriveOmega>::SharedPtr subscription_;
-  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_twist_;
+  rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr publisher_odometry_;
   /**
    * NOTE: see https://answers.ros.org/question/321436/ros2-msg-stamp-time-difference/
    */
