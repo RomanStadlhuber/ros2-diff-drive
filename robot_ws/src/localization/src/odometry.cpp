@@ -46,7 +46,7 @@ public:
 
     publisher_twist_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
 
-    publisher_odometry_ = this -> create_publisher<geometry_msgs::msg::Vector3>("odometry", 10);
+    publisher_odometry_ = this -> create_publisher<geometry_msgs::msg::Twist>("odometry", 10);
 
   }
 
@@ -104,13 +104,25 @@ private:
 
     RCLCPP_INFO(this->get_logger(), "dt: %lf[s]", dt.seconds());
 
-    auto ds = geometry_msgs::msg::Vector3();
+    planar = geometry_msgs::msg::Vector3();
 
-    ds.z = 0;
-    ds.x = _dv * cos(_dw + M_PI_2) * dt.seconds();
-    ds.y = _dv * sin(_dw + M_PI_2) * dt.seconds();
+    planar.x = _dv * dt.seconds(); // frontal distance in a timeframe
+    planar.y = planar.z = 0.0;
 
-    publisher_odometry_->publish(ds);
+    angular = geometry_msgs::msg::Vector3();
+
+    angular.x = angular.y = 0.0;
+
+    angular.z = _dw * dt.seconds(); // difference in angle in a timeframe
+
+    message = geometry_msgs::msg::Twist();
+
+    message.angular = angular;
+    message.linear = planar;
+
+    publisher_odometry_->publish(message);
+
+// ------------------------------------------------------------
   }
 
   // local variabled and functions used to calculate odometry
@@ -141,7 +153,7 @@ private:
 
   rclcpp::Subscription<angular_vel::msg::DiffDriveOmega>::SharedPtr subscription_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_twist_;
-  rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr publisher_odometry_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_odometry_;
   /**
    * NOTE: see https://answers.ros.org/question/321436/ros2-msg-stamp-time-difference/
    */
