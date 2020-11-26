@@ -81,23 +81,19 @@ class WheelPublisher:public rclcpp::Node{
 
       if(!is_in_margin(_wl,_wl_target, EASE_MARGIN)){
 
-        RCLCPP_INFO(this->get_logger(), "divergenve in wl!");
-
         dt_l_ = nodeclock_ -> now() - last_divert_;
 
         _wl += (_wl > _wl_target?-1.0:1.0) * _angular_accelleration * dt_l_.seconds();
-      }else{
+      }else{ // snap to target value if it is in margin
         _wl = _wl_target;
       } 
 
       if(!is_in_margin(_wr,_wr_target, EASE_MARGIN)){
 
-        RCLCPP_INFO(this->get_logger(), "divergenve in wr! ");
-
         dt_r_ = nodeclock_ -> now() - last_divert_;
 
         _wr += (_wr > _wr_target?-1.0:1.0) * _angular_accelleration * dt_r_.seconds();
-      }else{
+      }else{ // snap to target value if it is in margin
         _wr = _wr_target;
       }
     } 
