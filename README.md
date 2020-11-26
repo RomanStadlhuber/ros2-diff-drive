@@ -32,6 +32,25 @@ This will then start ignition gazebo as well as the required ros nodes.
 
 To be announced.
 
+
+
+
+### Control the Robot
+
+Right now the only way to control the robot is to use the publish functionality of the ros2 cli.
+After installing all the packages, launch the simulation or minimal setup and then run
+```shell
+    # NOTE: insert the desired values for wl and wr - corresponding to the angular velocities of the left and right wheels
+    $ ros2 topic pub --once /diff_drive/angular_vel_in  angular_vel/msg/DiffDriveOmega "{wl: 0.0, wr:0.0}"
+
+    # NOTE: to view angular and planar velocity or position and rotation (i.e. pose), run
+    $ ros2 topic echo /diff_drive/cmd_vel # for linear and angular velocity
+    $ ros2 topic echo /diff_drive/pose # for position on the xy-plane and rotation on z-axis
+
+    # for an exhaustive list of topics includeing types, run
+    $ ros2 topic list -t
+```
+
 ## Packages
 
 ### angular_vel
