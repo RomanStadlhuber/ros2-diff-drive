@@ -16,6 +16,7 @@ def generate_launch_description():
     env={"IGN_GAZEBO_SYSTEM_PLUGIN_PATH": environ["LD_LIBRARY_PATH"]}
 
     return LaunchDescription([
+        # launch gazebo
         ExecuteProcess(
             cmd=[
                 # NOTE this path ONLY works when launched from /robot_ws/. !!
@@ -37,6 +38,14 @@ def generate_launch_description():
             package="localization",
             namespace="diff_drive",
             executable="odometry",
+            parameters=[
+                param_file_path
+            ]
+        ),
+        Node(
+            package="localization",
+            namespace="diff_drive",
+            executable="localize",
             parameters=[
                 param_file_path
             ]
