@@ -20,7 +20,7 @@ def generate_launch_description():
         ExecuteProcess(
             cmd=[
                 # NOTE this path ONLY works when launched from /robot_ws/. !!
-                "ign gazebo", "../ignition_ws/differential-drive-robot.sdf"
+                "ign gazebo", "../ignition_ws/differential-drive-robot_2.sdf"
             ],
             output="screen",
             additional_env=env,
