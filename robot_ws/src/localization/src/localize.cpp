@@ -21,7 +21,7 @@ public:
             "odometry",
             10,
             std::bind(&Localize::odometry_callback, this, _1));
-        publisher_pose_ = this -> create_publisher<geometry_msgs::msg::Twist>("pose", 10);
+        publisher_pose_ = this->create_publisher<geometry_msgs::msg::Twist>("pose", 10);
     }
 
 private:
@@ -44,7 +44,7 @@ private:
         //update absolute angle
         _position.angular.z = _position.angular.z + ds->angular.z;
 
-        publisher_pose_ -> publish(_position);
+        publisher_pose_->publish(_position);
 
         // RCLCPP_INFO(
         //     this->get_logger(),
