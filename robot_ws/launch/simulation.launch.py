@@ -9,18 +9,19 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
 
-    param_file_path = str(pathlib.Path(__file__).parents[0]) + "/common-args.yaml"
+    param_file_path = str(pathlib.Path(
+        __file__).parents[0]) + "/common-args.yaml"
 
     print("launching with arguments from " + param_file_path)
 
-    env={"IGN_GAZEBO_SYSTEM_PLUGIN_PATH": environ["LD_LIBRARY_PATH"]}
+    env = {"IGN_GAZEBO_SYSTEM_PLUGIN_PATH": environ["LD_LIBRARY_PATH"]}
 
     return LaunchDescription([
         # launch gazebo
         ExecuteProcess(
             cmd=[
                 # NOTE this path ONLY works when launched from /robot_ws/. !!
-                "ign gazebo", "../ignition_ws/differential-drive-robot_2.sdf"
+                "ign gazebo", "../ignition_ws/differential-drive-robot_3.sdf"
             ],
             output="screen",
             additional_env=env,
